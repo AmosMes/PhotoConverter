@@ -15,7 +15,7 @@ from converter.worker import ConversionWorker, ConversionJob
 from converter.pdf_handler import PagePickerDialog, pdf_page_count
 from version import VERSION, AUTHOR
 
-from settings import load_appearance, save_appearance, AppearanceSettings
+from settings import load_appearance, AppearanceSettings
 from ui.theme_manager import ThemeManager
 from ui.toolbar_panel import ToolbarPanel
 from ui.appearance_dialog import AppearanceDialog
@@ -268,9 +268,6 @@ class MainWindow(QMainWindow):
         )
 
         return {"widget": widget, "file_list": file_list, "preview": preview, "settings": settings}
-
-    def _active_panel(self) -> dict:
-        return self._single_panel if self._tabs.currentIndex() == 0 else self._batch_panel
 
     def _on_tab_changed(self, _index: int):
         self._single_panel["settings"].set_convert_button_text("Convert")
