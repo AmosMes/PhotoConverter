@@ -35,3 +35,6 @@ desktop.ini
 *.log
 *.tmp
 .claude
+
+# Visual brainstorming sessions
+.superpowers/
