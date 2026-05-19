@@ -47,3 +47,11 @@ def test_corrupt_json_returns_defaults(tmp_path, monkeypatch):
     monkeypatch.setattr("settings.CONFIG_FILE", cfg)
     cfg.write_text("not json {{{")
     assert load_appearance() == AppearanceSettings()
+
+
+def test_invalid_accent_falls_back_to_default(tmp_path, monkeypatch):
+    cfg = tmp_path / "appearance.json"
+    monkeypatch.setattr("settings.CONFIG_DIR", tmp_path)
+    monkeypatch.setattr("settings.CONFIG_FILE", cfg)
+    cfg.write_text(json.dumps({"style": "minimal_dark", "layout": "three_panel", "accent": "NOT_A_COLOR"}))
+    assert load_appearance().accent == "#6450ff"

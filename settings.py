@@ -9,6 +9,16 @@ VALID_STYLES = {"modern_glass", "minimal_dark", "light_pro"}
 VALID_LAYOUTS = {"compact_toolbar", "three_panel", "preview_first"}
 
 
+def _is_valid_hex_color(s: str) -> bool:
+    if not isinstance(s, str) or not s.startswith("#"):
+        return False
+    try:
+        int(s[1:], 16)
+        return len(s) in (7, 9)
+    except ValueError:
+        return False
+
+
 @dataclass
 class AppearanceSettings:
     style: str = "modern_glass"
@@ -26,6 +36,8 @@ def load_appearance() -> AppearanceSettings:
             style = "modern_glass"
         if layout not in VALID_LAYOUTS:
             layout = "compact_toolbar"
+        if not _is_valid_hex_color(accent):
+            accent = "#6450ff"
         return AppearanceSettings(style=style, layout=layout, accent=accent)
     except (FileNotFoundError, json.JSONDecodeError):
         return AppearanceSettings()
