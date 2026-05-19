@@ -6,9 +6,7 @@ from PySide6.QtWidgets import (
     QProgressBar, QStatusBar, QMessageBox, QFrame,
 )
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction, QActionGroup
-
-from qt_material import apply_stylesheet
+from PySide6.QtGui import QAction
 
 from ui.file_list_panel import FileListPanel
 from ui.preview_panel import PreviewPanel
@@ -17,22 +15,15 @@ from converter.worker import ConversionWorker, ConversionJob
 from converter.pdf_handler import PagePickerDialog, pdf_page_count
 from version import VERSION, AUTHOR
 
-THEMES = {
-    "Dark":  "dark_blue.xml",
-    "Light": "light_blue.xml",
-}
-
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
         super().__init__()
         self._app = app
         self._worker: ConversionWorker | None = None
-        self._current_theme = "Dark"
         self.setWindowTitle(f"PhotoConverter {VERSION}")
         self.resize(1100, 680)
         self._build_ui()
-        self._apply_theme("Dark")
 
     def _build_ui(self):
         # --- Central widget ---
@@ -89,19 +80,6 @@ class MainWindow(QMainWindow):
         quit_action.setShortcut("Ctrl+Q")
         quit_action.triggered.connect(self.close)
         file_menu.addAction(quit_action)
-
-        # Theme menu
-        theme_menu = menu.addMenu("Theme")
-        theme_group = QActionGroup(self)
-        theme_group.setExclusive(True)
-
-        for name in THEMES:
-            action = QAction(name, self)
-            action.setCheckable(True)
-            action.setChecked(name == "Dark")
-            action.triggered.connect(lambda checked, n=name: self._apply_theme(n))
-            theme_group.addAction(action)
-            theme_menu.addAction(action)
 
         # Help menu
         help_menu = menu.addMenu("Help")
@@ -231,11 +209,6 @@ class MainWindow(QMainWindow):
             self._progress.setValue(0)
         for panel in (self._single_panel, self._batch_panel):
             panel["settings"].set_convert_button_enabled(not active)
-
-    def _apply_theme(self, name: str):
-        if name in THEMES:
-            apply_stylesheet(self._app, theme=THEMES[name])
-            self._current_theme = name
 
     def _show_about(self):
         QMessageBox.about(
