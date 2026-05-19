@@ -39,7 +39,9 @@ def test_apply_light_pro_does_not_raise(qapp):
 
 def test_apply_unknown_style_falls_back_to_modern_glass(qapp):
     ThemeManager.apply(qapp, "unknown_style", "#6450ff")
-    assert qapp.styleSheet() != ""
+    unknown_sheet = qapp.styleSheet()
+    ThemeManager.apply(qapp, "modern_glass", "#6450ff")
+    assert qapp.styleSheet() == unknown_sheet
 
 
 def test_accent_injected_in_stylesheet(qapp):

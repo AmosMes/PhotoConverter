@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QColor
 
 
+# Utility for callers that need rgba strings (e.g. swatch colours in AppearanceDialog).
 def _rgba(r: int, g: int, b: int, alpha: float) -> str:
     return f"rgba({r},{g},{b},{alpha})"
 
@@ -14,10 +15,9 @@ class ThemeManager:
 
     @staticmethod
     def apply(app: QApplication, style: str, accent: str) -> None:
-        from ui.theme_manager import STYLE_TEMPLATES
         template = STYLE_TEMPLATES.get(style, STYLE_TEMPLATES["modern_glass"])
-        a1, a2 = ThemeManager._accent_pair(accent)
         c = QColor(accent)
+        a1, a2 = accent, c.lighter(145).name()
         r, g, b = c.red(), c.green(), c.blue()
         app.setStyleSheet(template.format(a1=a1, a2=a2, ar=r, ag=g, ab=b))
 
