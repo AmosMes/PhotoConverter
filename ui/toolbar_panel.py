@@ -29,12 +29,12 @@ class ToolbarPanel(QWidget):
         self._btn_single.setObjectName("tabBtn")
         self._btn_single.setCheckable(True)
         self._btn_single.setChecked(True)
-        self._btn_single.clicked.connect(lambda: self._switch_tab(0))
+        self._btn_single.clicked.connect(lambda: self.switch_tab(0))
 
         self._btn_batch = QPushButton("Batch")
         self._btn_batch.setObjectName("tabBtn")
         self._btn_batch.setCheckable(True)
-        self._btn_batch.clicked.connect(lambda: self._switch_tab(1))
+        self._btn_batch.clicked.connect(lambda: self.switch_tab(1))
 
         layout.addWidget(self._btn_single)
         layout.addWidget(self._btn_batch)
@@ -77,7 +77,7 @@ class ToolbarPanel(QWidget):
         self._convert_btn.clicked.connect(self.convert_requested)
         layout.addWidget(self._convert_btn)
 
-    def _switch_tab(self, index: int):
+    def switch_tab(self, index: int):
         self._btn_single.setChecked(index == 0)
         self._btn_batch.setChecked(index == 1)
         self.tab_changed.emit(index)

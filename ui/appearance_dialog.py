@@ -147,7 +147,10 @@ class AppearanceDialog(QDialog):
             )
         else:
             btn.setStyleSheet(
-                "QPushButton { background: conic-gradient(red,yellow,green,cyan,blue,magenta,red);"
+                "QPushButton { background: qlineargradient("
+                "x1:0,y1:0,x2:1,y2:1,"
+                "stop:0 #ff0080,stop:0.17 #ff8000,stop:0.33 #ffff00,"
+                "stop:0.5 #00ff80,stop:0.67 #0080ff,stop:0.83 #8000ff,stop:1 #ff0080);"
                 "border-radius: 14px; border: 1px solid rgba(255,255,255,0.3); }"
                 "QPushButton:hover { border: 2px solid white; }"
             )

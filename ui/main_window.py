@@ -86,11 +86,17 @@ class MainWindow(QMainWindow):
         help_menu.addAction(about_action)
 
     def _open_appearance(self):
-        dlg = AppearanceDialog(self._app, self._appearance, self)
-        dlg.appearance_changed.connect(self._on_appearance_changed)
-        dlg.exec()
+        if hasattr(self, "_appearance_dlg") and self._appearance_dlg.isVisible():
+            self._appearance_dlg.raise_()
+            self._appearance_dlg.activateWindow()
+            return
+        self._appearance_dlg = AppearanceDialog(self._app, self._appearance, self)
+        self._appearance_dlg.appearance_changed.connect(self._on_appearance_changed)
+        self._appearance_dlg.show()
 
     def _on_appearance_changed(self, new_settings: AppearanceSettings):
+        if self._worker and self._worker.isRunning():
+            return  # ignore appearance changes while a conversion is in progress
         layout_changed = new_settings.layout != self._appearance.layout
         self._appearance = new_settings
         if layout_changed:
@@ -169,6 +175,7 @@ class MainWindow(QMainWindow):
     def _on_toolbar_tab_changed(self, index: int):
         self._single_body["widget"].setVisible(index == 0)
         self._batch_body["widget"].setVisible(index == 1)
+        self._toolbar.set_convert_button_text("Convert All" if index == 1 else "Convert")
 
     def _start_conversion_from_toolbar(self):
         body = self._batch_body if self._toolbar.active_tab() == 1 else self._single_body
@@ -217,6 +224,7 @@ class MainWindow(QMainWindow):
     def _on_preview_first_tab_changed(self, index: int):
         self._single_file_list.setVisible(index == 0)
         self._batch_file_list.setVisible(index == 1)
+        self._toolbar.set_convert_button_text("Convert All" if index == 1 else "Convert")
 
     def _start_conversion_from_preview_first(self):
         fl = self._batch_file_list if self._toolbar.active_tab() == 1 else self._single_file_list
@@ -226,10 +234,6 @@ class MainWindow(QMainWindow):
     def _framed(widget: QWidget) -> QFrame:
         frame = QFrame()
         frame.setObjectName("panelFrame")
-        frame.setStyleSheet(
-            "QFrame#panelFrame { border: 1px solid rgba(128,128,128,0.35);"
-            " border-radius: 6px; }"
-        )
         inner = QVBoxLayout(frame)
         inner.setContentsMargins(4, 4, 4, 4)
         inner.addWidget(widget)
@@ -278,10 +282,10 @@ class MainWindow(QMainWindow):
             self._tabs.setCurrentIndex(0)
             self._single_panel["file_list"].open_files()
         elif self._appearance.layout == "compact_toolbar":
-            self._toolbar._switch_tab(0)
+            self._toolbar.switch_tab(0)
             self._single_body["file_list"].open_files()
         else:
-            self._toolbar._switch_tab(0)
+            self._toolbar.switch_tab(0)
             self._single_file_list.open_files()
 
     def _menu_open_batch(self):
@@ -289,10 +293,10 @@ class MainWindow(QMainWindow):
             self._tabs.setCurrentIndex(1)
             self._batch_panel["file_list"].open_files()
         elif self._appearance.layout == "compact_toolbar":
-            self._toolbar._switch_tab(1)
+            self._toolbar.switch_tab(1)
             self._batch_body["file_list"].open_files()
         else:
-            self._toolbar._switch_tab(1)
+            self._toolbar.switch_tab(1)
             self._batch_file_list.open_files()
 
     def _start_conversion(self, file_list: FileListPanel, settings):
