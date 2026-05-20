@@ -26,9 +26,19 @@ class FileListPanel(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(6)
 
-        open_btn = QPushButton("Open File(s)..." if self._multi else "Open File...")
-        open_btn.clicked.connect(self._open_files)
-        layout.addWidget(open_btn)
+        if self._multi:
+            open_btn = QPushButton("Open File(s)...")
+            open_btn.clicked.connect(self._open_files)
+            layout.addWidget(open_btn)
+        else:
+            top_row = QHBoxLayout()
+            open_btn = QPushButton("Open File...")
+            open_btn.clicked.connect(self._open_files)
+            clear_btn = QPushButton("Clear")
+            clear_btn.clicked.connect(self.clear)
+            top_row.addWidget(open_btn)
+            top_row.addWidget(clear_btn)
+            layout.addLayout(top_row)
 
         self._list = QListWidget()
         self._list.currentItemChanged.connect(self._on_selection_changed)
