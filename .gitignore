@@ -34,7 +34,8 @@ desktop.ini
 # Logs / temp
 *.log
 *.tmp
-.claude
+.claude/
+CLAUDE.md
 
 # Visual brainstorming sessions
 .superpowers/
