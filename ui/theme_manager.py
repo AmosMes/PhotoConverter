@@ -170,7 +170,9 @@ QMenu {{
     background-color: #160f32;
     border: 1px solid rgba({ar},{ag},{ab},0.32);
     color: #ccbbff;
+    padding: 4px 0;
 }}
+QMenu::item {{ padding: 7px 28px 7px 14px; }}
 QMenu::item:selected {{ background-color: rgba({ar},{ag},{ab},0.28); }}
 QSplitter::handle {{ background-color: rgba({ar},{ag},{ab},0.18); }}
 QScrollBar:vertical {{
@@ -277,7 +279,8 @@ QLabel {{ color: #8888aa; background: transparent; }}
 QStatusBar {{ background-color: #141428; color: #666688; }}
 QMenuBar {{ background-color: #141428; color: #c8c8e0; }}
 QMenuBar::item:selected {{ background-color: #3a3a6a; }}
-QMenu {{ background-color: #1e1e38; border: 1px solid #3a3a5a; color: #c8c8e0; }}
+QMenu {{ background-color: #1e1e38; border: 1px solid #3a3a5a; color: #c8c8e0; padding: 4px 0; }}
+QMenu::item {{ padding: 7px 28px 7px 14px; }}
 QMenu::item:selected {{ background-color: #3a3a6a; }}
 QSplitter::handle {{ background-color: #2a2a4a; }}
 QScrollBar:vertical {{ background: #1e1e38; width: 8px; border-radius: 4px; }}
@@ -379,7 +382,8 @@ QLabel {{ color: #667085; background: transparent; }}
 QStatusBar {{ background-color: #e9ecef; color: #667085; border-top: 1px solid #d0d5dd; }}
 QMenuBar {{ background-color: #ffffff; color: #1a1a2e; border-bottom: 1px solid #d0d5dd; }}
 QMenuBar::item:selected {{ background-color: #e9ecef; border-radius: 3px; }}
-QMenu {{ background-color: #ffffff; border: 1px solid #d0d5dd; color: #1a1a2e; }}
+QMenu {{ background-color: #ffffff; border: 1px solid #d0d5dd; color: #1a1a2e; padding: 4px 0; }}
+QMenu::item {{ padding: 7px 28px 7px 14px; }}
 QMenu::item:selected {{ background-color: #e9ecef; }}
 QSplitter::handle {{ background-color: #d0d5dd; }}
 QScrollBar:vertical {{ background: #f0f2f5; width: 8px; border-radius: 4px; }}
