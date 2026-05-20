@@ -65,7 +65,7 @@ class ToolbarPanel(QWidget):
         layout.addWidget(self._quality_slider)
 
         # Output folder
-        self._browse_btn = QPushButton("Browse...")
+        self._browse_btn = QPushButton("Output Folder...")
         self._browse_btn.setFixedWidth(90)
         self._browse_btn.clicked.connect(self._browse_folder)
         layout.addWidget(self._browse_btn)
