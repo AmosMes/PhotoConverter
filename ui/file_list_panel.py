@@ -48,10 +48,13 @@ class FileListPanel(QWidget):
             btn_row = QHBoxLayout()
             add_btn = QPushButton("+ Add")
             remove_btn = QPushButton("- Remove")
+            clear_all_btn = QPushButton("Clear All")
             add_btn.clicked.connect(self._open_files)
             remove_btn.clicked.connect(self._remove_selected)
+            clear_all_btn.clicked.connect(self.clear)
             btn_row.addWidget(add_btn)
             btn_row.addWidget(remove_btn)
+            btn_row.addWidget(clear_all_btn)
             layout.addLayout(btn_row)
 
     def _open_files(self):
