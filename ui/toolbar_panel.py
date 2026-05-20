@@ -29,11 +29,13 @@ class ToolbarPanel(QWidget):
         self._btn_single.setObjectName("tabBtn")
         self._btn_single.setCheckable(True)
         self._btn_single.setChecked(True)
+        self._btn_single.setMinimumWidth(90)
         self._btn_single.clicked.connect(lambda: self.switch_tab(0))
 
         self._btn_batch = QPushButton("Batch")
         self._btn_batch.setObjectName("tabBtn")
         self._btn_batch.setCheckable(True)
+        self._btn_batch.setMinimumWidth(70)
         self._btn_batch.clicked.connect(lambda: self.switch_tab(1))
 
         layout.addWidget(self._btn_single)

@@ -31,8 +31,12 @@ class AppearanceDialog(QDialog):
         self._app = app
         self._settings = replace(settings)  # local mutable copy
         self.setWindowTitle("Appearance")
-        self.setMinimumWidth(360)
-        self.setWindowFlags(self.windowFlags() & ~Qt.WindowType.WindowContextHelpButtonHint)
+        self.setMinimumWidth(420)
+        self.setWindowFlags(
+            Qt.WindowType.Dialog |
+            Qt.WindowType.WindowTitleHint |
+            Qt.WindowType.WindowCloseButtonHint
+        )
         self._build_ui()
 
     def _build_ui(self):
@@ -67,6 +71,7 @@ class AppearanceDialog(QDialog):
             btn.setCheckable(True)
             btn.setChecked(key == self._settings.style)
             btn.setObjectName("tabBtn")
+            btn.setMinimumWidth(140)
             btn.clicked.connect(lambda _, k=key: self._set_style(k))
             self._style_group.addButton(btn)
             row.addWidget(btn)
@@ -87,6 +92,7 @@ class AppearanceDialog(QDialog):
             btn.setCheckable(True)
             btn.setChecked(key == self._settings.layout)
             btn.setObjectName("tabBtn")
+            btn.setMinimumWidth(140)
             btn.clicked.connect(lambda _, k=key: self._set_layout(k))
             self._layout_group.addButton(btn)
             row.addWidget(btn)
