@@ -308,6 +308,7 @@ class MainWindow(QMainWindow):
         output_format = settings.output_format()
         quality = settings.quality()
         dst_dir = settings.output_dir()
+        rotation = settings.rotation() if hasattr(settings, "rotation") else 0
 
         jobs: list[ConversionJob] = []
         for path in paths:
@@ -327,7 +328,7 @@ class MainWindow(QMainWindow):
                 pages = None
 
             effective_dst = dst_dir if dst_dir else str(Path(path).parent)
-            jobs.append(ConversionJob(path, effective_dst, output_format, quality, pages))
+            jobs.append(ConversionJob(path, effective_dst, output_format, quality, pages, rotation=rotation))
 
         if not jobs:
             return
