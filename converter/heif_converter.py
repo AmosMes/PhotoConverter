@@ -23,6 +23,7 @@ def convert_image(
     quality: int = 85,
     pil_image: Image.Image | None = None,
     stem_override: str | None = None,
+    rotation: int = 0,
 ) -> str:
     """Convert a single image file to the target format. Returns the output path.
 
@@ -38,6 +39,9 @@ def convert_image(
         img = pil_image
     else:
         img = Image.open(src_path)
+
+    if rotation != 0:
+        img = img.rotate(rotation, expand=True)
 
     # HEIF requires RGB or RGBA; PDF writer requires RGB
     if fmt_str in ("HEIF", "PDF") and img.mode not in ("RGB", "RGBA"):
