@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QSlider, QPushButton, QFileDialog, QFrame,
 )
 from PySide6.QtCore import Qt, Signal
+from ui.rotation_widget import RotationWidget
 
 FORMATS = ["JPEG", "PNG", "HEIF", "PDF"]
 NO_QUALITY_FORMATS = {"PDF"}
@@ -69,6 +70,10 @@ class ToolbarPanel(QWidget):
         self._browse_btn.clicked.connect(self._browse_folder)
         layout.addWidget(self._browse_btn)
 
+        # Rotation
+        self._rotation_widget = RotationWidget()
+        layout.addWidget(self._rotation_widget)
+
         layout.addStretch()
 
         # Convert button
@@ -110,6 +115,9 @@ class ToolbarPanel(QWidget):
 
     def output_dir(self) -> str:
         return self._output_dir
+
+    def rotation(self) -> int:
+        return self._rotation_widget.rotation()
 
     def set_convert_button_enabled(self, enabled: bool):
         self._convert_btn.setEnabled(enabled)
