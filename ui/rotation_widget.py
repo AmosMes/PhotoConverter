@@ -1,6 +1,6 @@
 import math
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel
-from PySide6.QtCore import Qt, QSize, QPointF
+from PySide6.QtCore import Qt, QSize, QPointF, Signal
 from PySide6.QtGui import QIcon, QPixmap, QPainter, QPen, QColor, QPolygonF
 
 
@@ -65,6 +65,8 @@ def _make_rotation_icon(clockwise: bool, size: int = 22) -> QIcon:
 
 
 class RotationWidget(QWidget):
+    rotation_changed = Signal(int)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self._rotation = 0
@@ -100,10 +102,12 @@ class RotationWidget(QWidget):
     def rotate_left(self):
         self._rotation = (self._rotation + 90) % 360
         self._label.setText(f"{self._rotation}°")
+        self.rotation_changed.emit(self._rotation)
 
     def rotate_right(self):
         self._rotation = (self._rotation - 90) % 360
         self._label.setText(f"{self._rotation}°")
+        self.rotation_changed.emit(self._rotation)
 
     def rotation(self) -> int:
         return self._rotation

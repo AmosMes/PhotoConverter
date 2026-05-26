@@ -14,6 +14,7 @@ class ToolbarPanel(QWidget):
 
     convert_requested = Signal()
     tab_changed = Signal(int)  # 0 = single, 1 = batch
+    rotation_changed = Signal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -72,6 +73,7 @@ class ToolbarPanel(QWidget):
 
         # Rotation
         self._rotation_widget = RotationWidget()
+        self._rotation_widget.rotation_changed.connect(self.rotation_changed)
         layout.addWidget(self._rotation_widget)
 
         layout.addStretch()

@@ -12,6 +12,7 @@ NO_QUALITY_FORMATS = {"PDF"}
 
 class SettingsPanel(QWidget):
     convert_requested = Signal()
+    rotation_changed = Signal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -53,6 +54,7 @@ class SettingsPanel(QWidget):
         # --- Rotation ---
         layout.addWidget(QLabel("Rotation"))
         self._rotation_widget = RotationWidget()
+        self._rotation_widget.rotation_changed.connect(self.rotation_changed)
         layout.addWidget(self._rotation_widget)
 
         layout.addStretch()

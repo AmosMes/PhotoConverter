@@ -147,6 +147,8 @@ class MainWindow(QMainWindow):
 
         self._toolbar.tab_changed.connect(self._on_toolbar_tab_changed)
         self._toolbar.convert_requested.connect(self._start_conversion_from_toolbar)
+        self._toolbar.rotation_changed.connect(self._single_body["preview"].set_rotation)
+        self._toolbar.rotation_changed.connect(self._batch_body["preview"].set_rotation)
 
     def _build_body_panel(self, multi: bool) -> dict:
         widget = QWidget()
@@ -220,6 +222,7 @@ class MainWindow(QMainWindow):
         )
         self._toolbar.tab_changed.connect(self._on_preview_first_tab_changed)
         self._toolbar.convert_requested.connect(self._start_conversion_from_preview_first)
+        self._toolbar.rotation_changed.connect(self._preview_pf.set_rotation)
 
     def _on_preview_first_tab_changed(self, index: int):
         self._single_file_list.setVisible(index == 0)
@@ -270,6 +273,7 @@ class MainWindow(QMainWindow):
         settings.convert_requested.connect(
             lambda: self._start_conversion(file_list, settings)
         )
+        settings.rotation_changed.connect(preview.set_rotation)
 
         return {"widget": widget, "file_list": file_list, "preview": preview, "settings": settings}
 

@@ -12,6 +12,8 @@ import fitz
 class PreviewPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self._original_pil: Image.Image | None = None
+        self._rotation: int = 0
         self._build_ui()
 
     def _build_ui(self):
@@ -43,7 +45,12 @@ class PreviewPanel(QWidget):
             self._image_label.setText(f"Preview unavailable\n{exc}")
             self._info_label.setText(p.name)
 
+    def set_rotation(self, degrees: int):
+        self._rotation = degrees
+        self._rerender()
+
     def clear(self):
+        self._original_pil = None
         self._image_label.setPixmap(QPixmap())
         self._image_label.setText("No file selected")
         self._info_label.setText("")
@@ -53,7 +60,8 @@ class PreviewPanel(QWidget):
         w, h = img.size
         fmt = img.format or Path(path).suffix.lstrip(".").upper()
         self._info_label.setText(f"{Path(path).name}   {w} × {h} · {fmt}")
-        self._set_pixmap_from_pil(img)
+        self._original_pil = img
+        self._rerender()
 
     def _load_pdf_preview(self, path: str):
         doc = fitz.open(path)
@@ -65,6 +73,15 @@ class PreviewPanel(QWidget):
         doc.close()
         pages_str = f"{page_count} page{'s' if page_count != 1 else ''}"
         self._info_label.setText(f"{Path(path).name}   {pages_str} · PDF")
+        self._original_pil = img
+        self._rerender()
+
+    def _rerender(self):
+        if self._original_pil is None:
+            return
+        img = self._original_pil
+        if self._rotation != 0:
+            img = img.rotate(self._rotation, expand=True)
         self._set_pixmap_from_pil(img)
 
     def _set_pixmap_from_pil(self, img: Image.Image):
@@ -75,6 +92,7 @@ class PreviewPanel(QWidget):
         img.save(buf, "PNG")
         pixmap = QPixmap()
         pixmap.loadFromData(buf.getvalue())
+        self._current_pixmap = pixmap
         self._display_pixmap(pixmap)
 
     def _display_pixmap(self, pixmap: QPixmap):
@@ -88,7 +106,5 @@ class PreviewPanel(QWidget):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        # Re-scale current pixmap when the panel is resized
-        if not self._image_label.pixmap() or self._image_label.pixmap().isNull():
-            return
-        self._display_pixmap(self._image_label.pixmap())
+        if self._original_pil is not None:
+            self._rerender()
