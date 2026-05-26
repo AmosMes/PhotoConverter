@@ -22,13 +22,15 @@ from ui.appearance_dialog import AppearanceDialog
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, app):
+    def __init__(self, app, icon=None):
         super().__init__()
         self._app = app
         self._worker: ConversionWorker | None = None
         self._appearance = load_appearance()
         self.setWindowTitle(f"PhotoConverter {VERSION}")
         self.resize(1100, 680)
+        if icon is not None and not icon.isNull():
+            self.setWindowIcon(icon)
         ThemeManager.apply(self._app, self._appearance.style, self._appearance.accent)
         self._rebuild_ui(self._appearance)
 
