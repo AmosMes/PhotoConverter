@@ -13,42 +13,48 @@ def _make_rotation_icon(clockwise: bool, size: int = 22) -> QIcon:
     p.setRenderHint(QPainter.RenderHint.Antialiasing)
 
     color = QColor(230, 230, 255)
-    pen = QPen(color, 2.0)
+    # Arc line thickness scales with icon size
+    pen = QPen(color, max(1.5, size * 0.1))
     pen.setCapStyle(Qt.PenCapStyle.RoundCap)
     p.setPen(pen)
     p.setBrush(Qt.BrushStyle.NoBrush)
 
-    m = 3
+    m = max(2, size // 8)
     d = size - 2 * m
     cx = size / 2.0
     cy = size / 2.0
     r = d / 2.0
 
+    # Arrowhead proportional to circle radius
+    ah_len = r * 0.58       # length of arrowhead along tangent
+    ah_half_w = r * 0.20    # half-width at base — pointed ratio ~3:1
+    # Reduce arc span so arc ends at arrowhead base, not tip
+    arc_trim = math.degrees(ah_len / r)  # degrees to cut from arc end
+
     if not clockwise:
-        # CCW (rotate left): arc from upper-right, going CCW 270°, ending lower-right
-        p.drawArc(m, m, d, d, 45 * 16, 270 * 16)
+        # CCW (rotate left): arc from upper-right going CCW, arrowhead at lower-right
+        p.drawArc(m, m, d, d, 45 * 16, int((270 - arc_trim) * 16))
         end_a = 315.0
-        # CCW tangent direction at end angle
         tx = -math.sin(math.radians(end_a))
         ty = -math.cos(math.radians(end_a))
     else:
-        # CW (rotate right): arc from upper-left, going CW 270°, ending lower-left
-        p.drawArc(m, m, d, d, 135 * 16, -270 * 16)
+        # CW (rotate right): arc from upper-left going CW, arrowhead at lower-left
+        p.drawArc(m, m, d, d, 135 * 16, int(-(270 - arc_trim) * 16))
         end_a = -135.0  # same as 225°
-        # CW tangent direction at end angle
         tx = math.sin(math.radians(end_a))
         ty = math.cos(math.radians(end_a))
 
-    # End point on circle
-    ex = cx + r * math.cos(math.radians(end_a))
-    ey = cy - r * math.sin(math.radians(end_a))
+    # Tip of arrowhead sits on the circle edge
+    tip_x = cx + r * math.cos(math.radians(end_a))
+    tip_y = cy - r * math.sin(math.radians(end_a))
 
-    # Filled arrowhead triangle at end point
-    ah = 4.0
+    # Base of arrowhead is ah_len back along the tangent
     nx, ny = -ty, tx  # perpendicular to tangent
-    tip = QPointF(ex, ey)
-    p1 = QPointF(ex - ah * tx + ah * 0.5 * nx, ey - ah * ty + ah * 0.5 * ny)
-    p2 = QPointF(ex - ah * tx - ah * 0.5 * nx, ey - ah * ty - ah * 0.5 * ny)
+    base_x = tip_x - ah_len * tx
+    base_y = tip_y - ah_len * ty
+    tip = QPointF(tip_x, tip_y)
+    p1 = QPointF(base_x + ah_half_w * nx, base_y + ah_half_w * ny)
+    p2 = QPointF(base_x - ah_half_w * nx, base_y - ah_half_w * ny)
 
     p.setPen(Qt.PenStyle.NoPen)
     p.setBrush(QColor(230, 230, 255))
