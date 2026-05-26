@@ -4,6 +4,7 @@ python -m PyInstaller `
     --onefile `
     --windowed `
     --icon="PhotoConverter.ico" `
+    --add-data "PhotoConverter.ico;." `
     --name="PhotoConverter" `
     --clean `
     main.py
