@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QComboBox, QSlider, QPushButton, QFileDialog, QLineEdit,
 )
 from PySide6.QtCore import Qt, Signal
+from ui.rotation_widget import RotationWidget
 
 FORMATS = ["JPEG", "PNG", "HEIF", "PDF"]
 # PDF and PNG have no meaningful lossy quality; PNG uses compression level
@@ -49,6 +50,11 @@ class SettingsPanel(QWidget):
         self._folder_edit.setReadOnly(True)
         layout.addWidget(self._folder_edit)
 
+        # --- Rotation ---
+        layout.addWidget(QLabel("Rotation"))
+        self._rotation_widget = RotationWidget()
+        layout.addWidget(self._rotation_widget)
+
         layout.addStretch()
 
         # --- Convert button ---
@@ -87,6 +93,9 @@ class SettingsPanel(QWidget):
 
     def output_dir(self) -> str:
         return self._output_dir
+
+    def rotation(self) -> int:
+        return self._rotation_widget.rotation()
 
     def set_convert_button_text(self, text: str):
         self._convert_btn.setText(text)
